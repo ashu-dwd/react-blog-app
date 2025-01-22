@@ -19,8 +19,9 @@ const Login = () => {
       // Extract JWT from the server response
       const token = response.data.token;
 
-      // Store the token in localStorage
-      localStorage.setItem("jwtToken", token);
+      // Store the token in sessionStorage
+      sessionStorage.setItem("jwtToken", token);
+      //localStorage.setItem("jwtToken", token);
 
       // Show success message
       setSuccessMessage("Login successful!");
@@ -29,7 +30,7 @@ const Login = () => {
       console.log("Token stored:", token);
     } catch (error) {
       console.error("Login failed:", error);
-      setErrorMessage("Invalid email or password. Please try again.");
+      setErrorMessage("Login failed. Please try again.");
       setSuccessMessage(""); // Clear any previous success message
     }
   };

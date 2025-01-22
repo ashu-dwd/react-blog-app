@@ -34,10 +34,18 @@ function Post() {
     const comment = { CommentBody: commentBody, username, postId: id };
     axios
       .post(`http://localhost:3000/comments/`, comment)
-      .then((response) => {
-        setComments([...comments, response.data]);
-        setCommentBody(""); // Clear textarea after posting
-      })
+      .then(
+        (response) => {
+          setComments([...comments, response.data]);
+          setCommentBody(""); // Clear textarea after posting
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          authorization: sessionStorage.getItem("jwtToken"),
+        }
+      )
       .catch((err) => {
         setError(err.message);
       });

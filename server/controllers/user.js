@@ -5,16 +5,19 @@ require("dotenv").config();
 
 
 const handleUserSignUp = async (req, res) => {
-    const { email, password, cPassword } = req.body;
-    console.log(req.body);
-    if (!email || !password || !cPassword) {
+    const { email, password } = req.body;
+    //console.log(req.body);
+    if (!email || !password) {
         return res.json({ message: "Please fill all the fields" });
     }
-    if (password !== cPassword) {
-        return res.json({ message: "Passwords do not match" });
+    if (password.length < 6) {
+        return res.json({ message: "Password must be at least 6 characters" });
     }
-
-    // Handle signup logic here
+    const userExists = await User.findOne({ where: { email } });
+    if (userExists) {
+        return res.json({ message: "User already exists" });
+    }
+    // Handling signup logic here
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
         const username = email.split('@')[0];
@@ -32,20 +35,20 @@ const handleUserSignUp = async (req, res) => {
 const handleUserLogin = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
-        return res.json({ message: "Please fill all the fields" });
+        return res.json({ error: "Please fill all the fields" });
     }
     // Handle login logic here
     try {
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({ where: { email: email } });
         if (!user) {
-            return res.json({ message: "User not found" });
+            return res.json({ error: "User not found" });
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            return res.json({ message: "Invalid password" });
+            return res.json({ error: "Invalid password" });
         }
         const token = jwt.sign({ id: user.id, email: user.email },
-            process.env.JWT_SECRET, // Secret key from environment variables
+            process.env.JWT_SECRET,
             { expiresIn: "1h" } // Token expiration time
         )
         res.json({ message: "Login successful", token });
@@ -58,6 +61,7 @@ const handleUserLogin = async (req, res) => {
 
 
 const handleUserUpdate = async (req, res) => {
+
 
 }
 

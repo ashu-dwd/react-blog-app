@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const { Posts } = require('../models');
+const { verifyToken } = require('../middlewares/auth');
 
 router.get('/', async (req, res) => {
     //res.json({ message: 'Hello World' });
@@ -10,7 +11,7 @@ router.get('/', async (req, res) => {
     res.json(listOfPosts);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
     try {
         const post = req.body;
         const result = await Posts.create(post);

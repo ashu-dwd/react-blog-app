@@ -4,7 +4,7 @@ require('dotenv').config();
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization'];
     if (!token) {
-        return res.status(403).json({ message: 'No token provided' });
+        return res.status(403).json({ message: 'Please Login First ' });
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
@@ -14,6 +14,7 @@ const verifyToken = (req, res, next) => {
         req.userId = decoded.id;
         next();
     });
+    next();
 };
 
-module.exports = verifyToken;
+module.exports = { verifyToken };
