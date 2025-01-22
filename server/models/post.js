@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         content: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(255),
             allowNull: false
         },
         username: {
@@ -22,5 +22,9 @@ module.exports = (sequelize, DataTypes) => {
             // }
         }
     });
+
+    Posts.associate = (models) => {
+        Posts.hasMany(models.Comments, { foreignKey: 'postId', onDelete: 'cascade' });
+    };
     return Posts;
 }

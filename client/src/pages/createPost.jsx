@@ -48,7 +48,7 @@ function CreatePost() {
             </div>
             <div>
               <label>Content:</label>
-              <Field as="textarea" name="content" rows="3" />
+              <Field as="textarea" name="content" rows="8" />
               <ErrorMessage name="content" component="span" />
             </div>
             <div>
